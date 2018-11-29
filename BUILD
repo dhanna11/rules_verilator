@@ -175,25 +175,16 @@ cc_library(
 )
 
 cc_library(
-    name = "lxt2",
-    srcs = [
-        "include/lxt2/lxt2_write.cpp",
-        "include/lxt2/lxt2_config.h",
-        "include/lxt2/wavealloca.h",
-        "include/lxt2/lxt2_write.h",
-    ],
-    hdrs = [
-        "include/lxt2/lxt2_write.h",
-        "include/lxt2/wavealloca.h",
-    ],
-    copts = ["-Iinclude/lxt2"],
-    strip_include_prefix = "include/",
-)
-
-cc_library(
     name = "libverilator",
     srcs = [
+        "include/gtkwave/fastlz.h",
+        "include/gtkwave/fst_config.h",
+        "include/gtkwave/fstapi.h",
+        "include/gtkwave/lxt2_write.h",
+        "include/gtkwave/lz4.h",
+        "include/gtkwave/wavealloca.h",
         "include/verilated.cpp",
+        "include/verilated_fst_c.cpp",
         "include/verilated_imp.h",
         "include/verilated_lxt2_c.cpp",
         "include/verilated_syms.h",
@@ -203,6 +194,7 @@ cc_library(
         ":include/verilated_config.h",
         "include/verilated.h",
         "include/verilated_dpi.h",
+        "include/verilated_fst_c.h",
         "include/verilated_heavy.h",
         "include/verilated_lxt2_c.h",
         "include/verilated_sym_props.h",
@@ -211,8 +203,19 @@ cc_library(
     ],
     strip_include_prefix = "include/",
     visibility = ["//visibility:public"],
-    textual_hdrs = ["include/lxt2/lxt2_write.cpp"],
-    deps = [":lxt2"],
+    textual_hdrs = [
+        "include/gtkwave/fastlz.c",
+        "include/gtkwave/fstapi.c",
+        "include/gtkwave/lxt2_write.cpp",
+        "include/gtkwave/lz4.c",
+    ],
+    includes = ["include"],
+    copts = [
+        # TODO: C++17 doesn't allow the register keyword.
+        # This should probably be fixed another way
+        "-Wno-deprecated-register",
+        "-Dregister= ",
+    ],
 )
 
 cc_library(
